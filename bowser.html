@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <script  src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="/static/js/ICanHaz.min.js"></script>
+    <script src="/static/js/jquery.tablesorter.min.js"></script>
+    <script src="/static/js/bootstrap-alerts.js"></script>
+
+    <link href='http://fonts.googleapis.com/css?family=Questrial' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+    <link href='/static/css/pygments.css' rel='stylesheet' type='text/css'>
+
+    <title>Bowser</title>
+
+    <style type="text/css">
+      body{
+     /* background-image: url("/static/img/grad1.jpg"), url("/static/img/grad2.jpg");
+     background-repeat: repeat-x, repeat;
+     */
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    #filebrowser-container {
+      color: #888;
+      font-family: 'Questrial', sans-serif;
+      font-style: bold;
+
+
+    }
+
+    a, a:hover{
+      color: #46a546;
+    }
+
+    #curdir {
+      float:right;
+      margin-right: 20px;
+      /*background-color:rgba(5,5,5,0.2);*/
+    }
+
+    #files, #dirs {
+      background-color:rgba(5,5,5,0.2);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+      margin-left: 2em;
+    }
+
+    #files {
+      margin-left:30%;
+    }
+
+    #nav-up {
+      float:right;
+    }
+
+
+    </style>
+  </head>
+  <body>
+
+    <div id="alerts-container"></div>
+
+    <script id="alerts" type="text/html">
+      <div class="alert-message {{severity}}">
+          <a class="close" href="#">×</a>
+          <p><strong>{{severity}}:</strong> {{message}}</p>
+      </div>
+    </script>
+
+
+
+    <script id="filebrowser" type="text/html">
+      <ul class="breadcrumb" id="curdir">
+
+        Current Directory:
+
+        {{#breadcrumbs}}
+          <li> <a href="#" class="dirlink" id="/dir/{{0}}/">{{1}} </a><span class="divider">/</span></li>
+        {{/breadcrumbs}}
+      </ul>
+
+
+
+      <div class="sidebar" id="dirs">
+        Directories:
+        <div id="nav-up">
+          <a href="#" class="btn small dirlink" id="/dir{{parentdir}}"> Go up [..] </a>
+        </div>
+
+
+        <table>
+          <thead>
+            <tr><th>Filename</th></tr>
+          </thead>
+          <tbody>
+          {{#dirs}}
+          <tr>
+            {{#curdir}}
+              <td>
+              <a class="dirlink" id="/dir/{{curdir}}/{{.}}/" href="#">{{.}}</a>
+              </td>
+            {{/curdir}}
+            {{^curdir}}
+              <td>
+              <a class="dirlink" id="/dir/{{.}}/" href="#">{{.}}</a>
+              </td>
+            {{/curdir}}
+
+            </tr>
+          {{/dirs}}
+        </tbody>
+      </table>  
+
+     </div>
+
+     <div class="content" id="files">
+      
+     <table id="xfiletable" class="zebra-striped tablesorter">
+          <thead>
+            <tr><th class="header green">Filename</th><th class="header blue">Modification Date</th></tr>
+          </thead>
+          <tbody>
+
+        
+          {{#files}}
+            <tr>
+              <td><a href="/preview/{{curdir}}{{filename}}">{{filename}} </a></td> <td>{{modtime}}</td>
+            </tr>
+          {{/files}}
+          </tbody>
+     </table>
+     </div>
+
+      </script>
+
+
+    <script>
+
+      $(function() {
+
+        $(".alert-message").alert()
+
+        $(window).bind('hashchange', function () {
+          //console.log(window.location.hash);
+          update_filebrowser(window.location.hash.replace('#', ''));
+        });
+
+
+
+       function update_filebrowser(path){
+
+         var path = path || '/dir/';
+
+         $.getJSON(path, function(data) {
+           var html = ich.filebrowser(data);
+           $('#filebrowser-container').html(html);
+         }).error(function() { 
+          var msg = "Could not retrieve the directory: " + path
+          $('#alerts-container').html(ich.alerts({severity: 'error', message: msg })); 
+          $(".alert-message").alert()
+         });
+    
+
+
+      };
+
+
+     update_filebrowser('/dir/');
+     $("table#xfiletable").tablesorter({sortList: [[0,0], [1,0]]});
+
+     $('#filebrowser-container').click(function(e){
+
+        if( $(e.target).is('a') && e.target.className === "dirlink" ) {
+
+           update_filebrowser(e.target.id);
+           window.location.hash =  e.target.id.replace('//', '/');
+           return false;
+
+        }
+     });
+
+
+       });
+    </script>
+
+    <div class="container-fluid">
+      <div class="page-header" >
+        <h1>Bowser
+          <small>Doggedly simple file browser</small>
+        </h1>
+      </div>
+    </div>
+    
+    <br/>
+
+    <div class="container-fluid" id="filebrowser-container"></div>
+
+    
+  </body>
+</html>
