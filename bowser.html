@@ -4,7 +4,6 @@
 
     <script  src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
     <script src="/static/js/ICanHaz.min.js"></script>
-    <script src="/static/js/jquery.tablesorter.min.js"></script>
     <script src="/static/js/bootstrap-alerts.js"></script>
 
     <link href='http://fonts.googleapis.com/css?family=Questrial' rel='stylesheet' type='text/css'>
@@ -99,6 +98,7 @@
           <tbody>
           {{#dirs}}
           <tr>
+
             {{#curdir}}
               <td>
               <a class="dirlink" id="/dir/{{curdir}}/{{.}}/" href="#">{{.}}</a>
@@ -119,13 +119,11 @@
 
      <div class="content" id="files">
       
-     <table id="xfiletable" class="zebra-striped tablesorter">
+     <table id="xfiletable" class="zebra-striped">
           <thead>
-            <tr><th class="header green">Filename</th><th class="header blue">Modification Date</th></tr>
+            <tr><th class="green">Filename</th><th class="blue">Modification Date</th></tr>
           </thead>
           <tbody>
-
-        
           {{#files}}
             <tr>
               <td><a href="/preview/{{curdir}}{{filename}}">{{filename}} </a></td> <td>{{modtime}}</td>
@@ -142,7 +140,7 @@
 
       $(function() {
 
-        $(".alert-message").alert()
+        $(".alert-message").alert();
 
         $(window).bind('hashchange', function () {
           //console.log(window.location.hash);
@@ -170,7 +168,6 @@
 
 
      update_filebrowser('/dir/');
-     $("table#xfiletable").tablesorter({sortList: [[0,0], [1,0]]});
 
      $('#filebrowser-container').click(function(e){
 
@@ -178,6 +175,7 @@
 
            update_filebrowser(e.target.id);
            window.location.hash =  e.target.id.replace('//', '/');
+
            return false;
 
         }
