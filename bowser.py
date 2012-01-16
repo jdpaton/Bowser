@@ -11,10 +11,14 @@ from bottle import (
     template
   )
 
-from pygments import highlight
-from pygments.lexers import get_lexer_for_filename
-from pygments.formatters import HtmlFormatter
-from pygments.styles import get_style_by_name
+try:
+  from pygments import highlight
+  from pygments.lexers import get_lexer_for_filename
+  from pygments.formatters import HtmlFormatter
+  from pygments.styles import get_style_by_name
+  USE_PYGMENTS = True
+except ImportError:
+  USE_PYGMENTS = False
 
 bottle.debug = True
 
@@ -47,13 +51,28 @@ def preview_file(path):
   path = path.replace('//', '/')
   fullpath = os.path.join(STATIC_DIR[1], path)
   code = open(fullpath, 'r').read()
-  try:
-    lexer = get_lexer_for_filename(os.path.basename(fullpath))
-    formatter = HtmlFormatter(style="tango", full=True)
-    result = highlight(code, lexer, formatter)
-    return result
-  except:
-    return serve_file(path)
+
+  if USE_PYGMENTS:
+
+    try:
+      lexer = get_lexer_for_filename(os.path.basename(fullpath))
+      formatter = HtmlFormatter(style="tango", full=True)
+      result = highlight(code, lexer, formatter)
+      return result
+    except:
+      return serve_file(path)
+
+  else:
+    html = " <script src=\"/static/js/google-code-prettify/prettify.js\"></script>"
+    html += " <script src=\"http://code.jquery.com/jquery-1.7.1.min.js\"></script>"
+    html += "<link href=\"/static/js/google-code-prettify/prettify.css\" type=\"text/css\" rel=\"stylesheet\" />"
+    html += " <script>$(function() { prettyPrint() }); </script>"
+    html += " <pre class=\"prettyprint\"> "
+    html += code
+    html += " </pre> "
+    return html
+
+
 
 @route("/dir/<path:path>")
 def serve_dir(path):
