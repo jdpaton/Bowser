@@ -4,7 +4,6 @@ import time
 import json
 import os
 
-from bottle_ext_jade import jade_template
 from bottle import (
     route, run, 
     static_file, 
