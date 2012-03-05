@@ -87,7 +87,6 @@ def serve_dir(path):
       for f in files:
         if os.path.isdir(os.path.join(fullpath, f)):
 
-          print [name for name in os.listdir(os.path.join(fullpath,f))]
           if not (f.startswith('.') and SHOW_DOTFILES is False):
             dirs.append({'name':f, \
                          'numfiles':len([name for name in os.listdir(os.path.join(fullpath,f)) if os.path.isfile(os.path.join(fullpath,f,name)) ]), 
@@ -96,7 +95,7 @@ def serve_dir(path):
         else:
           if not (f.startswith('.') and SHOW_DOTFILES is False):
             fmtime = time.strftime("%m/%d/%Y %I:%M:%S %p",time.localtime(os.path.getmtime(os.path.join(fullpath,f))))
-            filelist.append({ 'filename' : f, 'modtime' : fmtime})
+            filelist.append({ 'filename' : f, 'modtime' : fmtime, 'size' : round(float(os.path.getsize(os.path.join(fullpath,f))) / (1024 * 1024),2) })
 
       parent_dir = '/'.join(path.split('/')[:-2])
       if len(path.split('/')) > 2:
@@ -106,7 +105,6 @@ def serve_dir(path):
         parent_dir = '/'
       parent_dir = parent_dir.replace('//', '/')
       path = path.replace('//', '/')
-
       return {'parentdir': parent_dir,'curdir': path, 'breadcrumbs' : breadcrumb(path), 'files': filelist, 'dirs': dirs}
 
 

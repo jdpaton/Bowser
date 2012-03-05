@@ -9,7 +9,7 @@
     <link href='http://fonts.googleapis.com/css?family=Questrial' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 
-    <link href='/static/css/pygments.css' rel='stylesheet' type='text/css'>
+    <!--<link href='/static/css/pygments.css' rel='stylesheet' type='text/css'>-->
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-custom.css">
 
     <title>Bowser</title>
@@ -87,28 +87,33 @@
       <div class="row">
 
         <div class="span3 hero-unit" id="dirs">
+
           <div id="nav-up">
-            <a href="#" class="btn small dirlink" id="/dir{{parentdir}}"> Go up [..] </a>
+            <a href="#" class="dirlink btn small" id="/dir{{parentdir}}"> Go up [..] </a>
           </div>
 
           <h2>Directories:</h2>
     
-          <table>
+          <table class="table table-striped table-bordered table-condensed">
             <thead>
-              <tr><th></th></tr>
+              <tr><th>Name</th><th>#Dirs</th><th>#Files</th></tr>
             </thead>
             <tbody>
             {{#dirs}}
             <tr>
               {{#curdir}}
                 <td>
-                  <a class="dirlink" id="/dir/{{curdir}}/{{name}}/" href="#">{{name}} <div class="pull-right"> ({{numdirs}})  ({{numfiles}})</div></a>
+                  <a class="dirlink" id="/dir/{{curdir}}/{{name}}/" href="#">{{name}}</a>
                 </td>
+                <td>{{numdirs}}</td>
+                <td>{{numfiles}}</td>
               {{/curdir}}
               {{^curdir}}
                 <td>
-                  <a class="dirlink" id="/dir/{{name}}/" href="#">{{name}}  <div class="pull-right">({{numdirs}}) ({{numfiles}}) </div></a>
+                  <a class="dirlink" id="/dir/{{name}}/" href="#">{{name}}</div></a>
                 </td>
+                <td>{{numdirs}}</td>
+                <td>{{numfiles}}</td>
               {{/curdir}}
 
               </tr>
@@ -120,14 +125,14 @@
 
        <div class="hero-unit span12" id="files">
          <h2>Files:</h2> 
-       <table id="xfiletable" class="zebra-striped">
+       <table id="xfiletable" class="table table-striped table-bordered table-condensed">
             <thead>
-              <tr><th><h4>Filename</h4></th><th><h4>Modification Date</h4></th></tr>
+              <tr><th><h4>Filename</h4></th><th><h4>Modification Date</h4></th><th><h4>Size<h4></th></tr>
             </thead>
             <tbody>
             {{#files}}
               <tr>
-                <td><a href="/preview/{{curdir}}{{filename}}">{{filename}} </a></td> <td>{{modtime}}</td>
+                <td><a href="/preview/{{curdir}}{{filename}}">{{filename}} </a></td> <td>{{modtime}}</td><td>{{size}}M</td>
               </tr>
             {{/files}}
             </tbody>
@@ -172,8 +177,9 @@
      update_filebrowser('/dir/');
 
      $('#filebrowser-container').click(function(e){
-
-        if( $(e.target).is('a') && e.target.className === "dirlink" ) {
+        
+        console.log($(e));
+        if( $(e.target).is('a') && $(e.target).hasClass("dirlink") ) {
 
            update_filebrowser(e.target.id);
            window.location.hash =  e.target.id.replace('//', '/');
