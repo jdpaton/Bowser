@@ -4,7 +4,7 @@ Bowser
 (WIP, potentially insecure) Simple HTTP based file browser, with file previewing and syntax highlighting
 support.
 
-![image](http://i.imgur.com/LagcR.png)
+![image](http://i.imgur.com/c51gL.png)
 
 
 **Install**
