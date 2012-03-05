@@ -86,8 +86,13 @@ def serve_dir(path):
 
       for f in files:
         if os.path.isdir(os.path.join(fullpath, f)):
+
+          print [name for name in os.listdir(os.path.join(fullpath,f))]
           if not (f.startswith('.') and SHOW_DOTFILES is False):
-            dirs.append(f)
+            dirs.append({'name':f, \
+                         'numfiles':len([name for name in os.listdir(os.path.join(fullpath,f)) if os.path.isfile(os.path.join(fullpath,f,name)) ]), 
+                         'numdirs':len([name for name in os.listdir(os.path.join(fullpath,f),) if os.path.isdir(os.path.join(fullpath,f,name)) ]) 
+                         })
         else:
           if not (f.startswith('.') and SHOW_DOTFILES is False):
             fmtime = time.strftime("%m/%d/%Y %I:%M:%S %p",time.localtime(os.path.getmtime(os.path.join(fullpath,f))))
