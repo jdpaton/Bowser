@@ -4,6 +4,8 @@ import time
 import json
 import os
 
+import argparse
+
 from bottle import (
     route, run, 
     static_file, 
@@ -119,4 +121,16 @@ def breadcrumb(path):
     return crumbs
 
 if __name__ == '__main__':
+  
+  parser = argparse.ArgumentParser(description='Share a directory over HTTP instantly.')
+  parser.add_argument('-d', '--dir', default=".", help='The directory to share')
+  parser.add_argument('-p', '--port', default="8080", type=int, help='The local server port')
+  args = parser.parse_args()
+
+  if args.dir: 
+    STATIC_DIR[1] = args.dir 
+
+  if args.port:
+    PORT = args.port
   run(host=HOST, port=PORT, reloader=True)
+
