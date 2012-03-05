@@ -9,7 +9,7 @@
     <link href='http://fonts.googleapis.com/css?family=Questrial' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 
-    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <link href='/static/css/pygments.css' rel='stylesheet' type='text/css'>
 
     <title>Bowser</title>
@@ -35,7 +35,6 @@
     }
 
     #curdir {
-      float:right;
       margin-right: 20px;
       /*background-color:rgba(5,5,5,0.2);*/
     }
@@ -49,7 +48,6 @@
     }
 
     #files {
-      margin-left:30%;
     }
 
     #nav-up {
@@ -83,56 +81,57 @@
       </ul>
 
 
+      <div class="row">
+        <div class="span3" id="dirs">
+          Directories:
+          <div id="nav-up">
+            <a href="#" class="btn small dirlink" id="/dir{{parentdir}}"> Go up [..] </a>
+          </div>
 
-      <div class="sidebar" id="dirs">
-        Directories:
-        <div id="nav-up">
-          <a href="#" class="btn small dirlink" id="/dir{{parentdir}}"> Go up [..] </a>
+
+          <table>
+            <thead>
+              <tr><th>Filename</th></tr>
+            </thead>
+            <tbody>
+            {{#dirs}}
+            <tr>
+
+              {{#curdir}}
+                <td>
+                <a class="dirlink" id="/dir/{{curdir}}/{{.}}/" href="#">{{.}}</a>
+                </td>
+              {{/curdir}}
+              {{^curdir}}
+                <td>
+                <a class="dirlink" id="/dir/{{.}}/" href="#">{{.}}</a>
+                </td>
+              {{/curdir}}
+
+              </tr>
+            {{/dirs}}
+          </tbody>
+        </table>  
+
         </div>
 
+       <div class="span12" id="files">
+        
+       <table id="xfiletable" class="zebra-striped">
+            <thead>
+              <tr><th class="green">Filename</th><th class="blue">Modification Date</th></tr>
+            </thead>
+            <tbody>
+            {{#files}}
+              <tr>
+                <td><a href="/preview/{{curdir}}{{filename}}">{{filename}} </a></td> <td>{{modtime}}</td>
+              </tr>
+            {{/files}}
+            </tbody>
+       </table>
+       </div>
 
-        <table>
-          <thead>
-            <tr><th>Filename</th></tr>
-          </thead>
-          <tbody>
-          {{#dirs}}
-          <tr>
-
-            {{#curdir}}
-              <td>
-              <a class="dirlink" id="/dir/{{curdir}}/{{.}}/" href="#">{{.}}</a>
-              </td>
-            {{/curdir}}
-            {{^curdir}}
-              <td>
-              <a class="dirlink" id="/dir/{{.}}/" href="#">{{.}}</a>
-              </td>
-            {{/curdir}}
-
-            </tr>
-          {{/dirs}}
-        </tbody>
-      </table>  
-
-     </div>
-
-     <div class="content" id="files">
-      
-     <table id="xfiletable" class="zebra-striped">
-          <thead>
-            <tr><th class="green">Filename</th><th class="blue">Modification Date</th></tr>
-          </thead>
-          <tbody>
-          {{#files}}
-            <tr>
-              <td><a href="/preview/{{curdir}}{{filename}}">{{filename}} </a></td> <td>{{modtime}}</td>
-            </tr>
-          {{/files}}
-          </tbody>
-     </table>
-     </div>
-
+      </div>
       </script>
 
 
